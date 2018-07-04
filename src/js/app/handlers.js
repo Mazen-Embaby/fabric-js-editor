@@ -6,6 +6,8 @@ require('../lib/jquery.ui.position.min.js');
 require('../lib/jquery.contextMenu.min.js');
 require('../lib/jquery.tooltipster.min.js');
 
+
+
 var config = require('./config.js');
 var utils = new (require('./fabricUtils.js'))();
 var page = new (require('./page.js'))();
@@ -132,15 +134,27 @@ function showActiveTools() {
   var tools = $("#active-tools");
   var obj = canvas.getActiveObject();
 
-  if (canvas.getActiveGroup() !== null && canvas.getActiveGroup() !== undefined) {
+  if (canvas.getActiveObjects().length>1 && canvas.getActiveObjects()!==null) {
+      
+
+      
     $("#active-tools > div").addClass("noshow");
     tools.removeClass("noshow");
     $("div.group", tools).removeClass("noshow");
-  } else if (obj !== null && obj !== undefined) {
+    
+                    console.log("new select1! " +canvas.getActiveObjects()) ;
+    
+  } 
+  
+     else if (obj !== null && obj !== undefined) {
+
     $("#active-tools > div").addClass("noshow");
     tools.removeClass("noshow");
 
     var type = canvas.getActiveObject().type;
+                        console.log("HERE! " +canvas.getActiveObjects()) ;
+
+    
     if (type === "i-text") {
       $("div.text", tools).removeClass("noshow");
 
@@ -267,7 +281,11 @@ function listeners() {
 
   // Set event listeners
   canvas.on({
-    "object:selected": function() {
+      
+    "selection:updated": function() {
+      showActiveTools();
+    },
+    "selection:created": function() {
       showActiveTools();
     },
     "selection:cleared": function() {
@@ -360,28 +378,31 @@ function listeners() {
   });
 
   $("#shapes-line").on("click", function() {
-    canvas.deactivateAllWithDispatch();
-    canvas.renderAll();
+      //    canvas.deactivateAllWithDispatch() ;
+      //    canvas.renderAll();
+
+      canvas.discardActiveObject() ;
+      canvas.requestRenderAll() ;
     drawing.drawObj("line");
     canvas.defaultCursor = 'crosshair';
   });
 
   $("#shapes-circle").on("click", function() {
-    canvas.deactivateAllWithDispatch();
+    canvas.discardActiveObject();
     canvas.renderAll();
     drawing.drawObj("circle");
     canvas.defaultCursor = 'crosshair';
   });
 
   $("#shapes-rectangle").on("click", function() {
-    canvas.deactivateAllWithDispatch();
+    canvas.discardActiveObject();
     canvas.renderAll();
     drawing.drawObj("square");
     canvas.defaultCursor = 'crosshair';
   });
 
   $("#shapes-rounded").on("click", function() {
-    canvas.deactivateAllWithDispatch();
+    canvas.discardActiveObject();
     canvas.renderAll();
     drawing.drawObj("rounded-rect");
     canvas.defaultCursor = 'crosshair';
