@@ -196,9 +196,9 @@ function getImageBounds(fitToCanvas) {
 // includes shadows
 function getObjBounds(obj) {
   var bounds = obj.getBoundingRect();
-  var shadow = obj.Shadow();
-
-  if (shadow !== null) {
+  var shadow = obj.Shadow;
+console.log("Ddd "+shadow);
+  if (shadow != null || shadow != undefined) {
     var blur = shadow.blur;
     var mBlur = blur * Math.abs(obj.scaleX + obj.scaleY) / 4;
     var signX = shadow.offsetX >= 0.0 ? 1.0 : -1.0;
@@ -501,7 +501,7 @@ function isGlow(object) {
 function getShadowBlur(object) {
   object = object || canvas.getActiveObject();
   var shadow = object.shadow;
-  if (shadow === null) {
+  if (shadow == null) {
     return null;
   }
 
