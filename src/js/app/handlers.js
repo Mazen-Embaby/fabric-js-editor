@@ -6,8 +6,6 @@ require('../lib/jquery.ui.position.min.js');
 require('../lib/jquery.contextMenu.min.js');
 require('../lib/jquery.tooltipster.min.js');
 
-
-
 var config = require('./config.js');
 var utils = new (require('./fabricUtils.js'))();
 var page = new (require('./page.js'))();
@@ -82,7 +80,7 @@ function rightClick() {
 
   // Bind right-click menu
   $('#content').on('contextmenu.custom', function (e) {
-    var target = canvas.findTarget(e.e);
+    var target = canvas.findTarget(e);
     if (target !== null && target !== undefined) {
       canvas.setActiveObject(target);
       return true;
@@ -133,27 +131,22 @@ function showActiveTools() {
 
   var tools = $("#active-tools");
   var obj = canvas.getActiveObject();
-
-  if (canvas.getActiveObjects().length>1 && canvas.getActiveObjects()!==null) {
+  
+  
+  if (obj){
       
-
-      
+  if (canvas.getActiveObjects().length>1) {
     $("#active-tools > div").addClass("noshow");
     tools.removeClass("noshow");
     $("div.group", tools).removeClass("noshow");
     
-                    console.log("new select1! " +canvas.getActiveObjects()) ;
-    
   } 
-  
      else if (obj !== null && obj !== undefined) {
 
     $("#active-tools > div").addClass("noshow");
     tools.removeClass("noshow");
 
     var type = canvas.getActiveObject().type;
-                        console.log("HERE! " +canvas.getActiveObjects()) ;
-
     
     if (type === "i-text") {
       $("div.text", tools).removeClass("noshow");
@@ -210,7 +203,9 @@ function showActiveTools() {
     page.glowColorPicker();
     page.shadowColorPicker();
 
-  } else {
+  }
+  }
+    else {
     hideActiveTools();
   }
 }
@@ -378,8 +373,6 @@ function listeners() {
   });
 
   $("#shapes-line").on("click", function() {
-      //    canvas.deactivateAllWithDispatch() ;
-      //    canvas.renderAll();
 
       canvas.discardActiveObject() ;
       canvas.requestRenderAll() ;
@@ -623,7 +616,7 @@ function setCurrentShadowValues() {
     $("#shadow-switch-label")[0].MaterialSwitch.on();
     $("#glow-switch-label")[0].MaterialSwitch.off();
 
-    $("#shadow-offset-slider")[0].MaterialSlider.on("change", utils.getShadowOffset().x);
+    $("#shadow-offset-slider")[0].MaterialSlider.on("change", utils.getShadowOffset().x);    
     $("#shadow-blur-slider")[0].MaterialSlider.on("change", utils.getShadowBlur());
 
     shadowColor = utils.getShadowColor();

@@ -120,7 +120,7 @@ function drawObj(objType) {
       canvas.defaultCursor = 'auto';
 
       // Fix selection bug by selecting and deselecting all objects
-//    console.log("Hello world!");
+    
     
     utils.selectAll();
     canvas.discardActiveObject();

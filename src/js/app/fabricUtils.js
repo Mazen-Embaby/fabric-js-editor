@@ -10,21 +10,7 @@ var canvas = global.canvas;
 var filesaver = require('../lib/filesaver.min.js');
 
 function selectAll() {
-//  canvas.discardActiveObject() ;
-//
-//  if (objs === undefined) {
-//    objs = canvas.getObjects();
-//  }
-//
-//  objs.map(function(o) {
-//    return o.set('active', true);
-//  });
-//  var group = new fabric.Group(objs, {
-//    originX: 'center',
-//    originY: 'center'
-//  });
-//
-//  canvas.setActiveObject(group.setCoords());
+
  canvas.discardActiveObject();
         var sel = new fabric.ActiveSelection(canvas.getObjects(), {
           canvas: canvas,
@@ -110,7 +96,7 @@ function clone() {
 
 
 
-// TODO Fabric.js might do this for us now that we've on version >1.5
+// TODO Fabric.js might do this for us now that we've on version >2.3.3
 
 // This is the shadow-less version
 /*
@@ -197,8 +183,8 @@ function getImageBounds(fitToCanvas) {
 function getObjBounds(obj) {
   var bounds = obj.getBoundingRect();
   var shadow = obj.Shadow;
-console.log("Ddd "+shadow);
-  if (shadow != null || shadow != undefined) {
+
+  if (shadow != null) {
     var blur = shadow.blur;
     var mBlur = blur * Math.abs(obj.scaleX + obj.scaleY) / 4;
     var signX = shadow.offsetX >= 0.0 ? 1.0 : -1.0;
@@ -284,6 +270,7 @@ function deleteSelected() {
 function insertSvg(url, loader) {
   loader.removeClass("noshow");
   fabric.loadSVGFromURL(url, function(objects, options) {
+            console.log(url);
     var obj = fabric.util.groupSVGElements(objects, options);
 
     var scaleFactor = 1;
@@ -321,27 +308,11 @@ function getActiveStyle(styleName, object) {
     return '';
   }
 
-  // Don't change part of text
-  /*
-  return (object.getSelectionStyles && object.isEditing) ? (object.getSelectionStyles()[styleName] || '') : (object[styleName] || '');
-  */
-
   return (object[styleName] || '');
 }
 
 function setActiveStyle(styleName, value, object) {
   object = object || canvas.getActiveObject();
-
-  // Don't change part of text
-  /*
-  if (object.setSelectionStyles && object.isEditing) {
-    var style = { };
-    style[styleName] = value;
-    object.setSelectionStyles(style);
-  } else {
-    object[styleName] = value;
-  }
-  */
   object[styleName] = value;
 }
 
@@ -501,7 +472,7 @@ function isGlow(object) {
 function getShadowBlur(object) {
   object = object || canvas.getActiveObject();
   var shadow = object.shadow;
-  if (shadow == null) {
+  if (shadow === null) {
     return null;
   }
 
@@ -521,10 +492,9 @@ function getShadowColor(object) {
 function getShadowOffset(object) {
   object = object || canvas.getActiveObject();
   var shadow = object.shadow;
-  if (shadow === null) {
+  if (shadow == null) {
     return null;
   }
-
   var x = parseInt(shadow.offsetX);
   var y = parseInt(shadow.offsetY);
   return {"x": x, "y": y};
@@ -566,8 +536,6 @@ function UtilsModule() {
 }
 
 UtilsModule.prototype.selectAll = selectAll;
-//UtilsModule.prototype.sendGroupBackward = sendGroupBackward;
-//UtilsModule.prototype.sendGroupForward = sendGroupForward;
 UtilsModule.prototype.exportFile = exportFile;
 UtilsModule.prototype.getImageBounds = getImageBounds;
 UtilsModule.prototype.deleteSelected = deleteSelected;
